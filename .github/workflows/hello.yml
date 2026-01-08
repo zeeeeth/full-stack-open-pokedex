@@ -10,8 +10,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Say Hello
+<<<<<<< HEAD
               run: echo "Hello, World!" 
             - name: Now it is
               run: date
             - name: Directory content 
               run: ls -l
+=======
+              run: echo "Hello, World!" 
+>>>>>>> 3c22086416afcf7d8854ae7b6840a7df6bf61c5f
