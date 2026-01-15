@@ -29,6 +29,9 @@ jobs:
         run: npm run build
       - name: Run tests
         run: npm test
+      - name: Intentional Fail (remove after testing)
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: exit 1
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
       - name: Run e2e tests
