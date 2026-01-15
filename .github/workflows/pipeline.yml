@@ -52,7 +52,6 @@ jobs:
         run: |
           curl "$deploy_url"
 
-  
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-latest
