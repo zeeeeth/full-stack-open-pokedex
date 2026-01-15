@@ -39,11 +39,7 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-      - name: Debug payload for skip
-        if: ${{ github.event_name == 'push' }}
-        run: |
-          echo '${{ toJson(github.event) }}' | head -c 2000
-      - name: Deploy
+      - name: Deploy (Render)
         if: >-
           ${{ github.event_name == 'push' &&
               !contains(toJson(github.event), '#skip') }}
@@ -51,6 +47,22 @@ jobs:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
           curl "$deploy_url"
+      - name: Discord webhook (deploy)
+        if: ${{ steps.deploy.outcome == 'success' }}
+        uses: rjstone/discord-webhook-notify@v2.2.1
+        with:
+          description: Commit [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) deployed to production.
+          footer: Deployed by ${{ github.triggering_actor }}
+          severity: info
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: Discord webhook (failure)
+        if: ${{ failure() }}
+        uses: rjstone/discord-webhook-notify@v2.2.1
+        with:
+          description: Deployment of commit [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) failed.
+          footer: Triggered by ${{ github.triggering_actor }}
+          severity: error
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   tag_release:
     needs: [simple_deployment_pipeline]
