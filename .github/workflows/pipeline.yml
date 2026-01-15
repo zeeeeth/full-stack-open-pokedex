@@ -50,20 +50,16 @@ jobs:
           curl "$deploy_url"
       - name: Discord webhook (deploy)
         if: ${{ steps.deploy.outcome == 'success' }}
-        uses: rjstone/discord-webhook-notify@v2.2.1
+        uses: hunghg255/action-notifications@master
         with:
           description: Commit [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) deployed to production.
-          footer: Deployed by ${{ github.triggering_actor }}
-          severity: info
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          discord_webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
       - name: Discord webhook (failure)
         if: ${{ always() && steps.deploy.outcome == 'failure' }}
-        uses: rjstone/discord-webhook-notify@v2.2.1
+        uses: hunghg255/action-notifications@master
         with:
           description: Deployment of commit [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) failed.
-          footer: Triggered by ${{ github.triggering_actor }}
-          severity: error
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          discord_webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   tag_release:
     needs: [simple_deployment_pipeline]
