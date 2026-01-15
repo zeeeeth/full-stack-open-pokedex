@@ -44,12 +44,10 @@ jobs:
         if: >-
           ${{ github.event_name == 'push' &&
               !contains(toJson(github.event), '#skip') }}
-        # env:
-        #   deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-        # run: |
-        #   curl "$deploy_url"
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
-          curl -f -X POST "https://example.com/this-will-404"
+          curl "$deploy_url"
       - name: Discord webhook (deploy)
         if: ${{ steps.deploy.outcome == 'success' }}
         uses: hunghg255/action-notifications@master
