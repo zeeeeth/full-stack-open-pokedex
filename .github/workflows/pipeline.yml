@@ -55,7 +55,7 @@ jobs:
           description: Commit [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) deployed to production.
           footer: Deployed by ${{ github.triggering_actor }}
           severity: info
-          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
       - name: Discord webhook (failure)
         if: ${{ always() && steps.deploy.outcome == 'failure' }}
         uses: rjstone/discord-webhook-notify@v2.2.1
@@ -63,7 +63,7 @@ jobs:
           description: Deployment of commit [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) failed.
           footer: Triggered by ${{ github.triggering_actor }}
           severity: error
-          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   tag_release:
     needs: [simple_deployment_pipeline]
