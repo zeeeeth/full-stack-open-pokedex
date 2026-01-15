@@ -29,9 +29,6 @@ jobs:
         run: npm run build
       - name: Run tests
         run: npm test
-      - name: Intentional Fail (remove after testing)
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        run: exit 1
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
       - name: Run e2e tests
@@ -47,10 +44,12 @@ jobs:
         if: >-
           ${{ github.event_name == 'push' &&
               !contains(toJson(github.event), '#skip') }}
-        env:
-          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        # env:
+        #   deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        # run: |
+        #   curl "$deploy_url"
         run: |
-          curl "$deploy_url"
+          curl -f -X POST "https://example.com/this-will-404"
       - name: Discord webhook (deploy)
         if: ${{ steps.deploy.outcome == 'success' }}
         uses: hunghg255/action-notifications@master
